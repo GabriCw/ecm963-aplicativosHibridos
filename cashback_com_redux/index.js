@@ -1,3 +1,5 @@
+const Redux = require('redux')
+
 //função criadora de ação: ela cria novos contratos
 const criarContrato = (nome, taxa) => {
     //ela devolve uma ação, ou seja, um objeto JS
