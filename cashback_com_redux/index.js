@@ -41,3 +41,42 @@ const historicoDePedidosDeCashback = (historicoDePedidosDeCashbackAtual = [], ac
     }
     return historicoDePedidosDeCashbackAtual
 }
+
+const caixa = (dinheiroEmCaixa = 0, acao) => {
+    if(acao.type === "CASHBACK"){
+      dinheiroEmCaixa -= acao.payload.valor
+    }
+    else if (acao.type === "CRIAR_CONTRATO"){
+      dinheiroEmCaixa += acao.payload.taxa
+    }
+    return dinheiroEmCaixa    
+  }
+  
+  const contratos = (listaDeContratosAtual = [], acao) => {
+    if(acao.type === "CRIAR_CONTRATO")
+      return [...listaDeContratosAtual, acao.payload]
+    if(acao.type === "CANCELAR_CONTRATO")
+      return listaDeContratosAtual.filter(c => c.nome !== acao.payload.nome)
+    return listaDeContratosAtual
+  }
+  
+  const { createStore, combineReducers } = Redux
+  
+  const todosOsReducers = combineReducers({
+    historicoDePedidosDeCashback, caixa, contratos
+  })
+  
+  const store = createStore(todosOsReducers)
+  
+  const acaoContratoJose = criarContrato('José', 50)
+  store.dispatch(acaoContratoJose)
+  console.log(store.getState())
+  const acaoContratoMaria = criarContrato('Maria', 50)
+  store.dispatch(acaoContratoMaria)
+  console.log(store.getState())
+  const acaoCashbackMaria = solicitarCashback('Maria', 10)
+  store.dispatch(acaoCashbackMaria)
+  console.log(store.getState())
+  const acaoCancelaContratoMaria = cancelarContrato('Maria')
+  store.dispatch(acaoCancelaContratoMaria)
+  console.log(store.getState())
